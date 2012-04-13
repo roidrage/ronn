@@ -9,6 +9,12 @@ require 'ronn/template'
 require 'ronn/utils'
 
 module Ronn
+  class UpcaseHeadingsRender < Redcarpet::Render::HTML
+    def header(text, level)
+      "<h#{level}>#{text.upcase}</h#{level}>"
+    end
+  end
+
   # The Document class can be used to load and inspect a ronn document
   # and to convert a ronn document into other formats, like roff or
   # HTML.
@@ -289,7 +295,7 @@ module Ronn
     end
 
     def input_html
-      @input_html ||= strip_heading(Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true, :space_after_headers => true, :fenced_code_blocks => true, :hard_wrap => false).render(markdown))
+      @input_html ||= strip_heading(Redcarpet::Markdown.new(UpcaseHeadingsRender, :tables => true, :space_after_headers => true, :fenced_code_blocks => true, :hard_wrap => false).render(markdown))
     end
 
     def strip_heading(html)
