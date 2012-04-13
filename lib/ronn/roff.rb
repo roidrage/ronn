@@ -78,6 +78,7 @@ module Ronn
     end
 
     def block_filter(node)
+      return if node.nil?
       if node.kind_of?(Array) || node.kind_of?(Hpricot::Elements)
         node.each { |ch| block_filter(ch) }
 
@@ -157,6 +158,10 @@ module Ronn
           end
           write "\n"
 
+        when 'h4', 'h5', 'h6'
+          macro "IP", %w["" 0]
+          inline_filter(node)
+
         when 'span', 'code', 'b', 'strong', 'kbd', 'samp', 'var', 'em', 'i',
              'u', 'br', 'a'
           inline_filter(node)
@@ -192,7 +197,7 @@ module Ronn
             write '\fR'
           end
 
-        when 'b', 'strong', 'kbd', 'samp'
+        when 'b', 'strong', 'kbd', 'samp', 'h4', 'h5', 'h6'
           write '\fB'
           inline_filter(node.children)
           write '\fR'

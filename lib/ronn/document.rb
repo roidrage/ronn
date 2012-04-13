@@ -1,6 +1,7 @@
 require 'time'
 require 'cgi'
 require 'hpricot'
+require 'redcarpet'
 require 'rdiscount'
 require 'ronn/index'
 require 'ronn/roff'
@@ -288,7 +289,7 @@ module Ronn
     end
 
     def input_html
-      @input_html ||= strip_heading(Markdown.new(markdown).to_html)
+      @input_html ||= strip_heading(Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true, :space_after_headers => true, :fenced_code_blocks => true, :hard_wrap => false).render(markdown))
     end
 
     def strip_heading(html)
@@ -461,6 +462,7 @@ module Ronn
         next if child_of?(node, 'a')
         next unless node.inner_text =~ /^#{name_pattern}$/
         sibling = node.next
+        next unless sibling
         next unless sibling.text?
         next unless sibling.content =~ /^\((\d+\w*)\)/
         node.swap(html_build_manual_reference_link(node, "(#{$1})"))
