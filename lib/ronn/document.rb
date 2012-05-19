@@ -13,6 +13,10 @@ module Ronn
     def header(text, level)
       "<h#{level}>#{text.upcase}</h#{level}>"
     end
+
+    def postprocess(text)
+      text.gsub(/&quot;/, '"')
+    end
   end
 
   # The Document class can be used to load and inspect a ronn document
